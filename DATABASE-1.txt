@@ -1,0 +1,42 @@
+CREATE TABLE book(
+    isbn VARCHAR(17) PRIMARY KEY CONSTRAINT chk_isbn CHECK (isbn LIKE "___-__-_____-__-_"),
+    title VARCHAR(255) NOT NULL UNIQUE,
+    genre VARCHAR(50) NOT NULL,
+    copies INT NOT NULL
+);
+
+CREATE TABLE student(
+    id VARCHAR(25) PRIMARY KEY CONSTRAINT chk_student_id CHECK (id LIKE "__/%"),
+    last_name VARCHAR(40) NOT NULL CONSTRAINT chk_student_lastname CHECK (last_name REGEXP "^[^0-9]*$"),
+    first_name VARCHAR(40) NOT NULL CONSTRAINT chk_student_firstname CHECK (first_name REGEXP "^[^0-9]*$"),
+    specialty VARCHAR(50) NOT NULL,
+    phone_number VARCHAR(15) NOT NULL CONSTRAINT chk_student_phone CHECK (phone_number REGEXP "^[0-9]{10,15}$")
+);
+
+CREATE TABLE professor(
+    id VARCHAR(25) PRIMARY KEY CONSTRAINT chk_professor_id CHECK (id LIKE "__/ENP%"),
+    last_name VARCHAR(40) NOT NULL CONSTRAINT chk_professor_lastname CHECK (last_name REGEXP "^[^0-9]*$"),
+    first_name VARCHAR(40) NOT NULL CONSTRAINT chk_professor_firstname CHECK (first_name REGEXP "^[^0-9]*$"),
+    grade VARCHAR(25) NOT NULL,
+    phone_number VARCHAR(15) NOT NULL CONSTRAINT chk_professor_phone CHECK (phone_number REGEXP "^[0-9]{10,15}$$")
+);
+
+CREATE TABLE borrow_student(
+    copy_id VARCHAR(25) PRIMARY KEY,
+    book_isbn VARCHAR(17),
+    student_id VARCHAR(25),
+    borrow_date DATE NOT NULL,
+    return_date DATE NOT NULL,
+    FOREIGN KEY (book_isbn) REFERENCES book(isbn),
+    FOREIGN KEY (student_id) REFERENCES student(id)
+)
+
+CREATE TABLE borrow_professor(
+    copy_id VARCHAR(25) PRIMARY KEY,
+    book_isbn VARCHAR(17),
+    professor_id VARCHAR(25),
+    borrow_date DATE NOT NULL,
+    return_date DATE NOT NULL,
+    FOREIGN KEY (book_isbn) REFERENCES book(isbn),
+    FOREIGN KEY (professor_id) REFERENCES professor(id)
+)
